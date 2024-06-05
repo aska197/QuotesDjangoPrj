@@ -17,19 +17,12 @@ def signup(request):
 
 @login_required
 def profile(request):
-    user = request.user
-    try:
-        profile = user.profile
-    except Profile.DoesNotExist:
-        profile = Profile.objects.create(user=user)
-        profile.save()
-
     if request.method == 'POST':
-        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if profile_form.is_valid():
             profile_form.save()
-            messages.success(request, 'Your profile is updated successfully')
             return redirect('users:profile')
+    else:
+        profile_form = ProfileForm(instance=request.user.profile)
 
-    profile_form = ProfileForm(instance=profile)
     return render(request, 'users/profile.html', {'profile_form': profile_form})

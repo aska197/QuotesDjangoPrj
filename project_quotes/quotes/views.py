@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .utils import get_mongodb
 from .forms import AuthorForm, QuoteForm
+from .models import Tag, Author, Quote
 
 def main(request, page=1):
     db = get_mongodb()
@@ -28,9 +29,7 @@ def add_quote(request):
     if request.method == 'POST':
         form = QuoteForm(request.POST)
         if form.is_valid():
-            quote = form.save(commit=False)
-            quote.save()
-            form.save_m2m()  # This is necessary to save the many-to-many relationships
+            form.save()
             return redirect('quotes:root')  # Redirect to the main page
     else:
         form = QuoteForm()

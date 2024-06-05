@@ -1,0 +1,33 @@
+# To run use: docker compose up -d in terminal
+
+services:
+  db:
+    image: postgres
+    restart: no
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: quotesapp-postgres
+      POSTGRES_PASSWORD: 567234
+
+  adminer:
+    image: adminer
+    restart: no
+    ports:
+      - "8080:8080"
+
+  mongo:
+    image: mongo
+    restart: no
+    ports:
+      - "27017:27017"
+
+  mongo-express:
+    image: mongo-express
+    restart: no
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false

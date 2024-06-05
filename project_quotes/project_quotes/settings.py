@@ -74,7 +74,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['project_quotes.database_routers.MongoDBRouter']
+DATABASE_ROUTERS = ['database_routers.MongoDBRouter']
 
 # Static files settings
 STATIC_URL = '/static/'
@@ -90,5 +90,7 @@ SECRET_KEY = '4hly6*i4-783hpbq-x(%sg@sl=!!0&phufh1i8a$4l)mx2^^9h'
 
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_ROOT = BASE_DIR / 'media'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

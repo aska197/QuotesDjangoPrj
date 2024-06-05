@@ -8,14 +8,26 @@ class Author(models.Model):
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return self.fullname
+
+    class Meta:
+        app_label = 'quotes'
+        db_table = 'authors'
+
 class Quote(models.Model):
     tags = models.ManyToManyField('Tag', related_name='quotes')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='quotes')
     quote = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        app_label = 'quotes'
+        db_table = 'quotes'
+
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
+    

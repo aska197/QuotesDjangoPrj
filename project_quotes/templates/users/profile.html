@@ -2,6 +2,10 @@
 
 {% block content %}
   <h2>Profile</h2>
+  <!-- Display the user's avatar -->
+  <div class="profile-avatar">
+      <img src="{{ user.profile.avatar.url }}" alt="Profile Avatar" width="250" height="250">
+  </div>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-row">
@@ -19,3 +23,4 @@
     </div>
   </form>
 {% endblock %}
+
