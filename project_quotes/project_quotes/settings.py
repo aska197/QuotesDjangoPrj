@@ -1,13 +1,26 @@
-# settings.py
+import logging
 import os
 from pathlib import Path
+import environ
+
+# Initialize environment variables
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# Read .env file
+env.read_env(env.str('ENV_PATH', default='.env'))
+
+# Logging configuration
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security and debugging settings
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Installed apps
 INSTALLED_APPS = [
@@ -38,7 +51,7 @@ ROOT_URLCONF = 'project_quotes.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Add this line
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,18 +71,18 @@ WSGI_APPLICATION = 'project_quotes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'quotesapp-postgres',
-        'USER': 'postgres',
-        'PASSWORD': '567234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     },
     'mongodb': {
         'ENGINE': 'djongo',
-        'NAME': 'project_quotes',
+        'NAME': env('MONGODB_NAME'),
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://localhost:27017/',
+            'host': f"mongodb://{env('MONGODB_HOST')}:{env('MONGODB_PORT')}/",
         }
     }
 }
@@ -86,11 +99,22 @@ STATICFILES_DIRS = [
 # APPEND_SLASH setting
 APPEND_SLASH = True
 
-SECRET_KEY = '4hly6*i4-783hpbq-x(%sg@sl=!!0&phufh1i8a$4l)mx2^^9h'
+# Django Secret Key
+SECRET_KEY = env('SECRET_KEY')
 
+# Login Redirect URL
 LOGIN_REDIRECT_URL = '/'
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# Media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'users.custom_email_backend.CustomEmailBackend'
+

@@ -1,13 +1,14 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from .utils import get_mongodb
 from .forms import AuthorForm, QuoteForm
 from .models import Tag, Author, Quote
 
 def main(request, page=1):
     db = get_mongodb()
-    quotes = db.quotes.find()
+    quotes = db.quotes.find().sort('created_at')  # Order by creation date or another field
     per_page = 10
     paginator = Paginator(list(quotes), per_page)
     quotes_one_page = paginator.page(page)

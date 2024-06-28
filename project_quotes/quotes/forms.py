@@ -15,6 +15,7 @@ class QuoteForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['author'].queryset = Author.objects.all()  # Set queryset for author field
         self.fields['tags'].queryset = Tag.objects.all()  # Set queryset for tags field
 
 class AuthorForm(forms.ModelForm):
@@ -24,3 +25,4 @@ class AuthorForm(forms.ModelForm):
 
     def __str__(self):
         return self.fullname
+
