@@ -1,5 +1,5 @@
 from django import forms
-from .models import Quote, Author, Tag
+from quotes.models import Quote, Author, Tag
 
 class QuoteForm(forms.ModelForm):
     class Meta:
@@ -10,13 +10,14 @@ class QuoteForm(forms.ModelForm):
         quote = super().save(commit=False)
         if commit:
             quote.save()
-            self.save_m2m()  # This is necessary to save the many-to-many relationships
+            self.save_m2m()  # Save many-to-many relationships
         return quote
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['author'].queryset = Author.objects.all()  # Set queryset for author field
-        self.fields['tags'].queryset = Tag.objects.all()  # Set queryset for tags field
+        # Ensure queryset is set for the author and tags fields
+        self.fields['author'].queryset = Author.objects.all()
+        self.fields['tags'].queryset = Tag.objects.all()
 
 class AuthorForm(forms.ModelForm):
     class Meta:
@@ -25,4 +26,10 @@ class AuthorForm(forms.ModelForm):
 
     def __str__(self):
         return self.fullname
+
+
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name']
 
